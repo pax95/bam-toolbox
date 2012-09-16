@@ -1,0 +1,41 @@
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStats (key STRING, adapter STRING,messageid STRING,payload_timestamp BIGINT) 
+STORED BY 
+'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES ( "cassandra.host" = "127.0.0.1",
+"cassandra.port" = "9160","cassandra.ks.name" = "EVENT_KS",
+"cassandra.ks.username" = "admin","cassandra.ks.password" = "admin",
+"cassandra.cf.name" = "adapter_service_data_publisher",
+"cassandra.columns.mapping" = ":key,payload_adapter,payload_messageid,payload_timestamp" );    
+
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMinute(adapter STRING, year SMALLINT,month SMALLINT,day SMALLINT,hour SMALLINT,minute SMALLINT, time STRING) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'mapred.jdbc.driver.class' = 'org.h2.Driver',
+'mapred.jdbc.url' = 'jdbc:h2:repository/database/samples/ADAPTER_STATS_DB;AUTO_SERVER=TRUE',
+'mapred.jdbc.username' = 'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+'hive.jdbc.update.on.duplicate' = 'true',
+'hive.jdbc.primary.key.fields' = 'adapter,year,month,day,hour,minute',
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_MINUTE ( adapter VARCHAR(100) NOT NULL, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, minute SMALLINT, time VARCHAR(30))' );
+
+insert overwrite table AdapterStatsPerMinute select adapter, 
+year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as year, 
+month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as month,
+day(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as day,
+hour(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as hour, 
+minute(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as minute,
+concat(substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,16),':00') as time 
+from AdapterStats 
+group by 
+adapter,
+year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )), 
+month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
+day(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
+hour(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
+minute(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
+substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,16);             
+
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMinuteDataFetcher (adapter STRING, year SMALLINT,month SMALLINT,day SMALLINT,hour SMALLINT,minute SMALLINT,time STRING) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'mapred.jdbc.driver.class' = 'org.h2.Driver',
+'mapred.jdbc.url' = 'jdbc:h2:repository/database/samples/ADAPTER_STATS_DB;AUTO_SERVER=TRUE',
+'mapred.jdbc.username' = 'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_MINUTE' );
+                                
