@@ -6,11 +6,25 @@ STORED BY
 "cassandra.cf.name" = "adapter_service_data_publisher",
 "cassandra.columns.mapping" = ":key,payload_adapter,payload_messageid,payload_timestamp" );    
 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterSummaryTable(adapter STRING, totalMessages INT) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver' ,
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam' , 
+'mapred.jdbc.username' = 'bam' , 
+'mapred.jdbc.password' = 'bam' , 
+'hive.jdbc.update.on.duplicate' = 'true' , 
+'hive.jdbc.primary.key.fields' = 'adapter' , 
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_SUMMARY_TABLE ( adapter VARCHAR(100) NOT NULL, totalMessages INT)' );
+
+insert overwrite table AdapterSummaryTable select adapter, count(adapter)
+from AdapterStats
+group by adapter;
+
 CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMinute(adapter STRING, year SMALLINT,month SMALLINT,day SMALLINT,hour SMALLINT,minute SMALLINT, time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
-'mapred.jdbc.driver.class' = 'org.h2.Driver',
-'mapred.jdbc.url' = 'jdbc:h2:repository/database/samples/ADAPTER_STATS_DB;AUTO_SERVER=TRUE',
-'mapred.jdbc.username' = 'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
 'hive.jdbc.primary.key.fields' = 'adapter,year,month,day,hour,minute',
 'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_MINUTE ( adapter VARCHAR(100) NOT NULL, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, minute SMALLINT, time VARCHAR(30))' );
@@ -34,8 +48,8 @@ substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:m
 
 CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMinuteDataFetcher (adapter STRING, year SMALLINT,month SMALLINT,day SMALLINT,hour SMALLINT,minute SMALLINT,time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
-'mapred.jdbc.driver.class' = 'org.h2.Driver',
-'mapred.jdbc.url' = 'jdbc:h2:repository/database/samples/ADAPTER_STATS_DB;AUTO_SERVER=TRUE',
-'mapred.jdbc.username' = 'wso2carbon','mapred.jdbc.password' = 'wso2carbon',
+'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_MINUTE' );
                                 
