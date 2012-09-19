@@ -20,22 +20,21 @@ insert overwrite table AdapterSummaryTable select adapter, count(adapter)
 from AdapterStats
 group by adapter;
 
-CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMinute(adapter STRING, year SMALLINT,month SMALLINT,day SMALLINT,hour SMALLINT,minute SMALLINT, time STRING) 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerHour(adapter STRING, totalMessages INT, year SMALLINT, month SMALLINT,day SMALLINT, hour SMALLINT, time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
 'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
-'hive.jdbc.primary.key.fields' = 'adapter,year,month,day,hour,minute',
-'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_MINUTE ( adapter VARCHAR(100) NOT NULL, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, minute SMALLINT, time VARCHAR(30))' );
+'hive.jdbc.primary.key.fields' = 'adapter,year,month,day,hour',
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_HOUR ( adapter VARCHAR(100) NOT NULL, totalMessages INT, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time VARCHAR(30))' );
 
-insert overwrite table AdapterStatsPerMinute select adapter, 
+insert overwrite table AdapterStatsPerHour select adapter, count(adapter), 
 year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as year, 
 month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as month,
 day(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as day,
 hour(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as hour, 
-minute(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as minute,
-concat(substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,16),':00') as time 
+concat(substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,13),':00:00') as time 
 from AdapterStats 
 group by 
 adapter,
@@ -43,15 +42,14 @@ year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.S
 month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
 day(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
 hour(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
-minute(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
-substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,16);             
+substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,13);             
 
-CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMinuteDataFetcher (adapter STRING, year SMALLINT,month SMALLINT,day SMALLINT,hour SMALLINT,minute SMALLINT,time STRING) 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerHourDataFetcher (adapter STRING, totalMessages INT, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
 'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
-'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_MINUTE' );
+'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_HOUR' );
                                 
 CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMonth (adapter STRING, totalMessages INT, year SMALLINT,month SMALLINT) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
