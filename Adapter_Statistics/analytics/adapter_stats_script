@@ -53,3 +53,27 @@ STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPE
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_MINUTE' );
                                 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMonth (adapter STRING, totalMessages INT, year SMALLINT,month SMALLINT) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
+'hive.jdbc.update.on.duplicate' = 'true',
+'hive.jdbc.primary.key.fields' = 'adapter,year,month',
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_MONTH ( adapter VARCHAR(100) NOT NULL, totalMessages INT, year SMALLINT, month SMALLINT)' );
+
+insert overwrite table AdapterStatsPerMonth select adapter, count(adapter), 
+year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as year, 
+month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as month
+from AdapterStats 
+group by adapter, 
+year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )), 
+month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' ));
+
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMonthDataFetcher (adapter STRING, totalMessages INT, year SMALLINT,month SMALLINT) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
+'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_MONTH' );
+                                    
