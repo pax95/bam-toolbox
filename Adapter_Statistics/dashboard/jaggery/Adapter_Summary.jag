@@ -1,0 +1,29 @@
+<%
+        var config = {};
+
+        var db = new Database("jdbc:mysql://localhost:3306/bam",
+        "bam", "bam", config);
+    	var result = db.query("select * from adapter_summary_table");
+
+        db.close();
+
+        var respJson = null;
+
+        
+        var colx = "adapter";
+    	var coly = "totalMessages";
+
+    	function convertDBResult(result, colx, coly) {
+			var array = [];
+			for (var i = 0; i < result.length; i++) {
+				// print("The " + i + "th result is : " + result[i]);
+				array.push([result[i][colx],parseFloat(result[i][coly])]);
+			}
+
+			return array;
+        };
+        respJson = convertDBResult(result, colx, coly);
+    
+
+        print(respJson);
+   		 %>
