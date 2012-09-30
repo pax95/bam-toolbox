@@ -11,6 +11,9 @@
       { "name" : "messageid",
         "type" : "STRING"
       },
+      { "name" : "sizeInBytes",
+        "type" : "LONG"  
+      },
       { "name" : "timestamp",
         "type" : "LONG"
       }

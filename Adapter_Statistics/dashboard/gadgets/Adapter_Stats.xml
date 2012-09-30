@@ -2,15 +2,17 @@
 <ModulePrefs scaling="false" height="300" title="Adapter summary">
 <Require feature="dynamic-height"/>
 </ModulePrefs>
-<Content type="html">
-<![CDATA[
+<Content type="html"><![CDATA[
+
+
+    <li
 
     <link href="css/jquery.jqplot.min.css" type="text/css" rel="stylesheet"/>
     <script src="js/jquery.min.js" type="text/javascript"></script>
     <script src="js/jquery.jqplot.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="js/plugins/jqplot.categoryAxisRenderer.js"></script>
     <script type="text/javascript" src="js/plugins/jqplot.barRenderer.js"></script>
-    
+
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
 <script lang="javascript" type="text/javascript">
     $(document).ready(function () {
@@ -30,7 +32,7 @@
             function update() {
                 var respJson = null;
                 $.ajax({
-                    url: "../../gadgetgen/Adapter_Summary.jag",
+                    url: "../jaggery/Adapter_Summary.jag",
 
                     dataType: 'json',
                     //GET method is used
@@ -51,8 +53,8 @@
                     }
                 });
 
-        
-        
+
+
         $("#ui-element").html('');
         plot = $.jqplot('ui-element', [respJson], {
                     title: 'Total messages',
@@ -82,14 +84,16 @@
                     }
                 });
                 plot.replot();
-    
-        
+
+
                 gadgets.window.adjustHeight();
             };
         });
     </script>
 <div id="ui-element" style="width: 325px; height: 250px;"/>
 <div id="text1"/>
-]]>
-</Content>
+/>
+>
+
+]]></Content>
 </Module>

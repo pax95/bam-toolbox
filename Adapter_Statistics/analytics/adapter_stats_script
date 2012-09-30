@@ -1,35 +1,35 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStats (key STRING, adapter STRING,messageid STRING,payload_timestamp BIGINT) 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStats (key STRING, adapter STRING,messageid STRING, sizeInBytes BIGINT, payload_timestamp BIGINT) 
 STORED BY 
 'org.apache.hadoop.hive.cassandra.CassandraStorageHandler' WITH SERDEPROPERTIES ( "cassandra.host" = "127.0.0.1",
 "cassandra.port" = "9160","cassandra.ks.name" = "EVENT_KS",
 "cassandra.ks.username" = "admin","cassandra.ks.password" = "admin",
 "cassandra.cf.name" = "adapter_service_data_publisher",
-"cassandra.columns.mapping" = ":key,payload_adapter,payload_messageid,payload_timestamp" );    
+"cassandra.columns.mapping" = ":key,payload_adapter,payload_messageid,payload_sizeInBytes,payload_timestamp" );    
 
-CREATE EXTERNAL TABLE IF NOT EXISTS AdapterSummaryTable(adapter STRING, totalMessages INT) 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterSummaryTable(adapter STRING, totalMessages BIGINT) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver' ,
-'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam' , 
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3' , 
 'mapred.jdbc.username' = 'bam' , 
 'mapred.jdbc.password' = 'bam' , 
 'hive.jdbc.update.on.duplicate' = 'true' , 
 'hive.jdbc.primary.key.fields' = 'adapter' , 
-'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_SUMMARY_TABLE ( adapter VARCHAR(100) NOT NULL, totalMessages INT)' );
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_SUMMARY_TABLE ( adapter VARCHAR(100) NOT NULL, totalMessages BIGINT)' );
 
 insert overwrite table AdapterSummaryTable select adapter, count(adapter)
 from AdapterStats
 group by adapter;
 
-CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerHour(adapter STRING, totalMessages INT, year SMALLINT, month SMALLINT,day SMALLINT, hour SMALLINT, time STRING) 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerHour(adapter STRING, totalMessages BIGINT, avgSize DOUBLE, year SMALLINT, month SMALLINT,day SMALLINT, hour SMALLINT, time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
-'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
 'hive.jdbc.primary.key.fields' = 'adapter,year,month,day,hour',
-'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_HOUR ( adapter VARCHAR(100) NOT NULL, totalMessages INT, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time VARCHAR(30))' );
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_HOUR ( adapter VARCHAR(100) NOT NULL, totalMessages BIGINT, avgSize DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time VARCHAR(30))' );
 
-insert overwrite table AdapterStatsPerHour select adapter, count(adapter), 
+insert overwrite table AdapterStatsPerHour select adapter, count(adapter), avg(sizeInBytes), 
 year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as year, 
 month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as month,
 day(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as day,
@@ -44,17 +44,38 @@ day(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SS
 hour(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )),
 substring(from_unixtime(cast(payload_timestamp/1000 as BIGINT), 'yyyy-MM-dd HH:mm:ss'),0,13);             
 
-CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerHourDataFetcher (adapter STRING, totalMessages INT, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time STRING) 
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerHourDataFetcher (adapter STRING, totalMessages BIGINT, avgSize DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
-'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_HOUR' );
+
+CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerDay(adapter STRING, totalMessages BIGINT, avgSize DOUBLE, year SMALLINT, month SMALLINT,day SMALLINT) 
+STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
+'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3',
+'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
+'hive.jdbc.update.on.duplicate' = 'true',
+'hive.jdbc.primary.key.fields' = 'adapter,year,month,day',
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_DAY ( adapter VARCHAR(100) NOT NULL, totalMessages BIGINT, avgSize DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT)' );
+
+insert overwrite table AdapterStatsPerDay select adapter, count(adapter), avg(avgSize), 
+year, 
+month,
+day
+from AdapterStatsPerHourDataFetcher
+group by 
+adapter,
+year, 
+month,
+day;
+                                    
                                 
 CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMonth (adapter STRING, totalMessages INT, year SMALLINT,month SMALLINT) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
-'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
 'hive.jdbc.primary.key.fields' = 'adapter,year,month',
@@ -71,7 +92,7 @@ month(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.
 CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerMonthDataFetcher (adapter STRING, totalMessages INT, year SMALLINT,month SMALLINT) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
-'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam',
+'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_MONTH' );
                                     
