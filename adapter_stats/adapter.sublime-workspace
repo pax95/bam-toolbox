@@ -1,0 +1,190 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.jag",
+			"settings":
+			{
+				"buffer_size": 3953,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/prebenasmussen/opt/jaggery-0.9.0-SNAPSHOT/apps/adapterstats/model/Adapter_Summary.jag",
+		"/Users/prebenasmussen/opt/jaggery-0.9.0-SNAPSHOT/apps/adapterstats/index.jsp",
+		"/Users/prebenasmussen/opt/jaggery-0.9.0-SNAPSHOT/apps/adapterstats/gadgets/mult-line-dashboard-chart.jag",
+		"/Users/prebenasmussen/Downloads/test/json utility 1.3/json.bat",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/repository/deployment/server/jaggeryapps/adapter_stats/index.jag",
+		"/Users/prebenasmussen/opt/jaggery-0.9.0-SNAPSHOT/apps/adapterstats/model/databaseConn.jag",
+		"/Users/prebenasmussen/opt/jaggery-0.9.0-SNAPSHOT/apps/adapterstats/index.jag",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Adapter_Statistics/analytics/analyzers.properties",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/rest-api/rest-api.sh",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Adapter_Statistics/streamDefn/adapter_stats_stream_def",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/KPI_Phone_Retail_Store/analytics/phone_retail_store_script",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Adapter_Statistics/analytics/adapter_stats_script",
+		"/Users/prebenasmussen/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/KPI_Phone_Retail_Store/streamDefn/streams.properties",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Adapter_Statistics/streamDefn/streams.properties",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Service_Statistics/analytics/service_stats",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/KPI_Phone_Retail_Store/streamDefn/kpi_store.js",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Service_Statistics/analytics/analyzers.properties",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Service_Statistics/streamDefn/streams.properties",
+		"/Users/prebenasmussen/opt/wso2bam-2.0.0/samples/toolboxes/Service_Statistics/streamDefn/service_stats_stream_def"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"			\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.jag",
+					"settings":
+					{
+						"buffer_size": 3953,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}
