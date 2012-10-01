@@ -97,7 +97,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
 			timeGroup = "hour";
 			orderByQuery = "group by hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
-			selectQuery = "time, sum(totalMessages) as totalmessages";
+			selectQuery = "time, sum(total_messages) as totalmessages";
 			jqPlotXaxisLbl = "Hour";
 			jqPlotAxisFormatString = "%b-%d %H:00";
 			_tickInterval = "1 hour";
@@ -113,7 +113,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
 			timeGroup = "day";
 			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
-			selectQuery = "time, sum(totalMessages) as totalmessages";
+			selectQuery = "time, sum(total_messages) as totalmessages";
 
 			jqPlotXaxisLbl = "Day";
 			jqPlotAxisFormatString = "%b-%d %H:00";
@@ -129,7 +129,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
 			timeGroup = "day";
 			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
-			selectQuery = "time, sum(totalMessages) as totalmessages";
+			selectQuery = "time, sum(total_messages) as totalmessages";
 
 			jqPlotXaxisLbl = "Day";
 			jqPlotAxisFormatString = "%b-%d";
@@ -145,7 +145,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_MONTH";
 			timeGroup = "month";
 			orderByQuery = "group by year,month,time order by year DESC ,month DESC";
-			selectQuery = "time, sum(totalMessages) as totalmessages";
+			selectQuery = "time, sum(total_messages) as totalmessages";
 
 			jqPlotXaxisLbl = "Month";
 			jqPlotAxisFormatString = "%Y-%b";
@@ -206,7 +206,7 @@
 			result = db.query(q);
 		}
 		catch(e){
-			print("<span style='color:#fff;font-weight:100;font-size:16px;'>No data available. Please visit our <a href='http://docs.wso2.org/wiki/display/BAM200/Service+Statistics+Toolbox' target='_blank' style='color:#FFFE89'>docs</a> to see how to configure AS monitoring</span><br /><span style='color:#eee;font-size:11px;'> <b>Reason : </b>" + e +"</span>");
+			print("<span style='color:#fff;font-weight:100;font-size:16px;'>No data available.<b>Reason : </b>" + e +"</span>");
 		}
 		finally{
 			db.close();
@@ -396,7 +396,7 @@ if(_messageCount){
 		var jqtickInterval = "<%=_tickInterval%>";
             	var plot1 = $.jqplot("dashboard-multiline-gadget", [messageCount], {
                 seriesColors: ["#81B2FF", "#D2FF95","#FB8383"],
-                title: 'Req. Countdd / Resp. Count / Fault Count',
+                title: 'Total messages',
                 highlighter: {
                     show: true,
                     sizeAdjust: 1,
@@ -425,7 +425,7 @@ if(_messageCount){
                 },
                 series: [
                     {
-                        label: 'Total Request Count',
+                        label: 'Total Message Count',
 			markerOptions: { size: 10,style:'filledCircle'}
 			
                     },
@@ -477,7 +477,7 @@ if(_messageCount){
 
 	}
 	else{
-	$("#errorInfo").html("<span style='color:#fff;font-weight:100;font-size:16px;'>No data available. Please visit our <a href='http://docs.wso2.org/wiki/display/BAM200/Service+Statistics+Toolbox' target='_blank' style='color:#FFFE89'>docs</a> to see how to configure AS monitoring</span>")	
+	$("#errorInfo").html("<span style='color:#fff;font-weight:100;font-size:16px;'>No data available.</span>")	
 	}
 	
 
