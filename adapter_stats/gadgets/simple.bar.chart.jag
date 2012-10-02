@@ -1,9 +1,7 @@
 <%
-	var server = request.getParameter('server');
-	var service = request.getParameter('service');
-	var operation = request.getParameter('opr');
+	var adapter = request.getParameter('adapter');
 	var time = request.getParameter('t');
-	//var results;
+	var result;	//var results;
 	var axisX = "time";
 	var axisY = "avg_response_time";
 	var axisData = null;
@@ -96,25 +94,25 @@
 
 	if(time){
 		if(time.toLowerCase() == "now"){
-			dataTable = "AS_STATS_SUMMARY_PER_MINUTE";
-			//timeGroup = "minute";
-			orderByQuery = "group by minute,hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC,minute DESC";
-			selectQuery = "time, avg(avg_response_time) as avg_response_time";
-			jqPlotAxisFormatString = "%b-%d %H:%M";
-			jqPlotXaxisLbl = "Minute";
-			_tickInterval = "5 minute";
+			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
+			//timeGroup = "hour";
+			orderByQuery = "group by hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
+			selectQuery = "time, sum(sum_size) as sum_size";
+			jqPlotAxisFormatString = "%b-%d %H:00";
+			jqPlotXaxisLbl = "Hour";
+			_tickInterval = "1 hour";
 
-			var toDate = getCurrentDay("now");
-			var fromDate = setFromdate("now");
+			var toDate = getCurrentDay("hour");
+			var fromDate = setFromdate("hour");
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "day"){
-			dataTable = "AS_STATS_SUMMARY_PER_HOUR";
+			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
 			//timeGroup = "hour";
-			orderByQuery = "group by HOUR,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
-			selectQuery = "time, avg(avg_response_time) as avg_response_time";
+			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
+			selectQuery = "time, sum(sum_size) as sum_size";
 			jqPlotAxisFormatString = "%b-%d %H:00";
-			jqPlotXaxisLbl = "Hour";
+			jqPlotXaxisLbl = "Day";
 			_tickInterval = "1 hour";
 
 			var toDate = getCurrentDay("day");
@@ -122,10 +120,10 @@
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "month"){
-			dataTable = "AS_STATS_SUMMARY_PER_DAY";
+			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
 			//timeGroup = "day";
 			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
-			selectQuery = "time, avg(avg_response_time) as avg_response_time";
+			selectQuery = "time, sum(sum_size) as sum_size";
 			jqPlotAxisFormatString = "%b-%d";
 			jqPlotXaxisLbl = "Day";
 			_tickInterval = "2 day";
@@ -135,10 +133,10 @@
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "all"){
-			dataTable = "AS_STATS_SUMMARY_PER_MONTH";
+			dataTable = "ADAPTER_STATS_SUMMARY_PER_MONTH";
 			//timeGroup = "month";
 			orderByQuery = "group by year,month,time order by year DESC ,month DESC";
-			selectQuery = "time, avg(avg_response_time) as avg_response_time";
+			selectQuery = "time, sum(sum_size) as sum_size";
 			jqPlotAxisFormatString = "%Y-%b";
 			jqPlotXaxisLbl = "Month";
 			_tickInterval = "1 month";
@@ -152,17 +150,11 @@
 		}
 	}
 	if(dataTable){
-		if(operation!=undefined && operation!="" && operation!=null){
+		if(adapter!=undefined && adapter!="" && adapter!=null){
 			result = queryDataOperationLvl();	
 		}
-		else if(service!=undefined && service!="" && service!=null){
-			result = queryDataServiceLvl();	
-		}
-		else if(server!=undefined && server!="" && server!=null){
-			result = queryDataServerLvl();	
-		}
 		else{
-			result = queryDataAllServers();
+			result = queryDataAllAdapters();
 				
 		}
 	}
@@ -171,7 +163,7 @@
 		
 		var result;
 		try{
-			var db = new Database("WSO2BAM_DATASOURCE");
+			var db = new Database("jdbc:mysql://localhost:3306/bam4", "bam", "bam");
 			result = db.query(q);
 		}
 		catch(e){
@@ -207,7 +199,7 @@
 		var year = param.year || "";
 		var month = param
 	}
-	function queryDataAllServers(){
+	function queryDataAllAdapters(){
 			axisData = null;
 			//axisYData = null;
 			
@@ -302,6 +294,7 @@ font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 <script type="text/javascript">
     $(document).ready(function(){
 	var seriesData = <%=axisData%>
+	alert(seriesData)
         var graphMaxValue;
 	var graphMinValue;
 	var yMax = 0;

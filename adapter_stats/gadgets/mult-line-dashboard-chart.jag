@@ -162,7 +162,7 @@
 	}
 	if(dataTable){
 		if(adapter!=undefined && adapter!="" && adapter!=null){
-			queryDataServerLvl();	
+			queryDataAdapter();	
 		}
 		else{
 			queryDataAllAdapters();	
@@ -224,51 +224,17 @@
 			}		
 	};
 	
-	function queryDataadapterLvl(){
-			_reqCount = null;
-			_respCount = null;
-			_faultCount = null;
-			var query = "select "+selectQuery+" from "+dataTable+"  where " + timeBetweenQuery + " and host='"+adapter+"' "+orderByQuery+"";
+	function queryDataAdapter(){
+			_messageCount = null;
+			var query = "select "+selectQuery+" from "+dataTable+"  where " + timeBetweenQuery + " and adapter='"+adapter+"' "+orderByQuery+"";
 			var result = QueryResults(query);
-			_reqCount = convertDBResult(result,__time,__reqCount);
-			_respCount = convertDBResult(result,__time,__respCount);
-			_faultCount = convertDBResult(result,__time,__faultCount);
-			if(_reqCount){			
-				len = _reqCount.length-1;
+			_messageCount = convertDBResult(result,__time,__messageCount);
+			if(_messageCount){			
+				len = _messageCount.length-1;
 			}
 
 	};
-	function queryDataServiceLvl(){			
-			_reqCount = null;
-			_respCount = null;
-			_faultCount = null;
 
-			var query = "select "+selectQuery+" from "+dataTable+" where " + timeBetweenQuery + " and host='"+adapter+"' and service_name='"+service+"' "+orderByQuery+"";
-			print(query);
-			var result = QueryResults(query);
-			_reqCount = convertDBResult(result,__time,__reqCount);
-			_respCount = convertDBResult(result,__time,__respCount);
-			_faultCount = convertDBResult(result,__time,__faultCount);
-			if(_reqCount){			
-			len = _reqCount.length-1;
-			}
-	};
-	function queryDataOperationLvl(){
-		
-			_reqCount = null;
-			_respCount = null;
-			_faultCount = null;
-			
-			var query = "select "+selectQuery+" from "+dataTable+" where " + timeBetweenQuery + " and host='"+adapter+"' and service_name='"+service+"' and operation_name='"+operation+"' "+orderByQuery+"";
-			var result = QueryResults(query);
-			_reqCount = convertDBResult(result,__time,__reqCount);
-			_respCount = convertDBResult(result,__time,__respCount);
-			_faultCount = convertDBResult(result,__time,__faultCount);
-			if(_reqCount){			
-			len = _reqCount.length-1;
-			}
-		
-	};
 	function formatTimeChunk(t){
 		if (t<10){
   			t="0" + t;

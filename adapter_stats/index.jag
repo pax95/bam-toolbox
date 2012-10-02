@@ -76,7 +76,7 @@
       </div>
       <div class="clearfix"></div>
       <div class="hero-unit">
-        <iframe id="dashboardWidget-1" class="single-column-gadget" src="gadgets/mult-line-dashboard-chart.jag?t=Month"></iframe>
+        <iframe id="dashboardWidget-1" class="single-column-gadget" src="gadgets/mult-line-dashboard-chart.jag?t=Now"></iframe>
       </div>
       <div class="row-fluid">
         <div class="hero-unit">

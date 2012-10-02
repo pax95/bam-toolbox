@@ -1,17 +1,13 @@
 $(function () {
     $("#adapter-dd").change(function(){
 	    var selectedAdapter = $("#adapter-dd option:selected").text();
-		if(selectedAdapter==''){
 			triggerCollect();
-		}
-		else{
-			populateAdapterCombo();		
-		}
 	});
     //$("#service-dd").ufd({log:true});
     //$("#operation-dd").ufd({log:true});
     $("#clearSelectionBtn").click(function(){
         $("#adapter-dd option:first-child").attr("selected", "selected");
+        triggerCollect();
     });
     $("#timely-dd button").click(function(){
         $("#timely-dd button").removeClass('btn-primary');
@@ -35,13 +31,11 @@ function reloadIFrame(param){
             var absUrl = currentUrl.split('?');
             currentUrl = absUrl[0];
         }   
-        var newUrl = currentUrl+"?"+encodeURI(adapter)+"&t="+t;
+        var newUrl = currentUrl+"?adapter="+encodeURI(adapter)+"&t="+t;
         $(this).attr('src',newUrl);
     });
 };
-function populateCombo(id,data){
-	
-}
+
 $(document).ready(function(){
 	$.ajax({
        		url:'populate_combos_ajaxprocessor.jag',
