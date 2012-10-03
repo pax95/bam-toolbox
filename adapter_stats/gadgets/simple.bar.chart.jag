@@ -3,7 +3,7 @@
 	var time = request.getParameter('t');
 	var result;	//var results;
 	var axisX = "time";
-	var axisY = "avg_response_time";
+	var axisY = "sum_size";
 	var axisData = null;
 	//var axisYData = null;
 	var dataTable = null;
@@ -97,7 +97,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
 			//timeGroup = "hour";
 			orderByQuery = "group by hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
-			selectQuery = "time, sum(sum_size) as sum_size";
+			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
 			jqPlotAxisFormatString = "%b-%d %H:00";
 			jqPlotXaxisLbl = "Hour";
 			_tickInterval = "1 hour";
@@ -110,7 +110,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
 			//timeGroup = "hour";
 			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
-			selectQuery = "time, sum(sum_size) as sum_size";
+			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
 			jqPlotAxisFormatString = "%b-%d %H:00";
 			jqPlotXaxisLbl = "Day";
 			_tickInterval = "1 hour";
@@ -123,7 +123,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
 			//timeGroup = "day";
 			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
-			selectQuery = "time, sum(sum_size) as sum_size";
+			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
 			jqPlotAxisFormatString = "%b-%d";
 			jqPlotXaxisLbl = "Day";
 			_tickInterval = "2 day";
@@ -136,7 +136,7 @@
 			dataTable = "ADAPTER_STATS_SUMMARY_PER_MONTH";
 			//timeGroup = "month";
 			orderByQuery = "group by year,month,time order by year DESC ,month DESC";
-			selectQuery = "time, sum(sum_size) as sum_size";
+			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
 			jqPlotAxisFormatString = "%Y-%b";
 			jqPlotXaxisLbl = "Month";
 			_tickInterval = "1 month";
@@ -294,8 +294,7 @@ font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 <script type="text/javascript">
     $(document).ready(function(){
 	var seriesData = <%=axisData%>
-	alert(seriesData)
-        var graphMaxValue;
+    var graphMaxValue;
 	var graphMinValue;
 	var yMax = 0;
 	var maxValue = Math.max.apply(Math,seriesData.map(function(o){return o[1];}));
@@ -342,7 +341,7 @@ font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	var xaxisLblFormat = "<%=jqPlotAxisFormatString%>";
         var plot1 = $.jqplot("bar-chart-simple", [seriesData], {
                 seriesColors: ["#FFC062"],
-                title: 'Average Response Time',
+                title: 'Total size of messages in MB',
                 highlighter: {
                     show: true,
                     sizeAdjust: 1,
@@ -366,7 +365,7 @@ font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
                 },
                 series: [
                     {
-                        label: 'Average Response Time',
+                        label: 'MB',
 			markerOptions: { size: 10,style:'filledCircle'}
 			
                     }
@@ -394,7 +393,7 @@ font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
                         min:0,max:yMax,numberTicks:6,
 			//tickInterval: 1,
                         tickOptions: {
-                            showMark: true,formatString:'%.2f ms'
+                            showMark: true,formatString:'%.3f MB'
                         }
                     }
                 },
@@ -405,7 +404,7 @@ font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
         	}
             });
 	}else{
-		$("#errorInfo").html("<span style='color:#fff;font-weight:100;font-size:16px;'>No data available. Please visit our <a href='http://docs.wso2.org/wiki/display/BAM200/Service+Statistics+Toolbox' target='_blank' style='color:#FFFE89'>docs</a> to see how to configure AS monitoring</span>")
+		$("#errorInfo").html("<span style='color:#fff;font-weight:100;font-size:16px;'>No data available.</span>")
 	}
 	
 

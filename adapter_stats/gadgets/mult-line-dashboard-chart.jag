@@ -395,17 +395,7 @@ if(_messageCount){
 			markerOptions: { size: 10,style:'filledCircle'}
 			
                     },
-			{
-			lineWidth:3,
-                        label: 'Total Response Count',markerOptions: { size: 10,style:'filledCircle'}
-			
-                    },
-                    
-                    {
-			lineWidth:3,
-                        label: 'Total Fault Count',markerOptions: { size: 10,style:'filledCircle'}
-                    }
-                ],
+			    ],
                 axesDefaults: {
                     rendererOptions: {
                         baselineWidth: 1.5,
