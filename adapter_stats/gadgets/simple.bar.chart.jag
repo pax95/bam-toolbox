@@ -151,7 +151,7 @@
 	}
 	if(dataTable){
 		if(adapter!=undefined && adapter!="" && adapter!=null){
-			result = queryDataOperationLvl();	
+			result = queryAdapter();	
 		}
 		else{
 			result = queryDataAllAdapters();
@@ -210,26 +210,10 @@
 			//axisYData = convertDBResult(result,axisY);
 		
 	};
-	function queryDataServerLvl(){
+	function queryAdapter(){
 			axisData = null;
 			//axisYData = null;
-	    		var query = "select "+selectQuery+" from "+dataTable+" where " + timeBetweenQuery + " and host='"+server+"' "+orderByQuery+"";
-			var result = QueryResults(query);
-			axisData = convertDBResult(result,axisX,axisY);
-			//axisYData = convertDBResult(result,axisY);
-	};
-	function queryDataServiceLvl(){
-			axisData = null;
-			//axisYData = null;
-	    		var query = "select "+selectQuery+" from "+dataTable+" where " + timeBetweenQuery + " and host='"+server+"' and service_name='"+service+"' "+orderByQuery+"";
-			var result = QueryResults(query);
-			axisData = convertDBResult(result,axisX,axisY);
-			//axisYData = convertDBResult(result,axisY);
-	};
-	function queryDataOperationLvl(){
-			axisData = null;
-			//axisYData = null;
-	    		var query = "select "+selectQuery+" from "+dataTable+" where " + timeBetweenQuery + " and host='"+server+"' and service_name='"+service+"' and operation_name='"+operation+"' "+orderByQuery+"";
+	    		var query = "select "+selectQuery+" from "+dataTable+" where " + timeBetweenQuery + " and adapter='"+adapter+"' "+orderByQuery+"";
 			var result = QueryResults(query);
 			axisData = convertDBResult(result,axisX,axisY);
 			//axisYData = convertDBResult(result,axisY);

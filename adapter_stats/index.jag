@@ -85,10 +85,7 @@
       </div>
       <div class="row-fluid">
         <div class="span4">
-          <iframe id="dashboardWidget-3" src="gadgets/gauge.jag?server=&service&opr&t=Now" class="gadget-small"></iframe>
-        </div><!--/span-->
-        <div class="span4">
-          <iframe id="dashboardWidget-4" src="gadgets/simple.pie.chart.jag?server=&service&opr&t=Now" class="gadget-small gadget-larger-width"></iframe>
+          <iframe id="dashboardWidget-3" src="gadgets/gauge.jag?&t=Now" class="gadget-small"></iframe>
         </div><!--/span-->
 
       </div><!--/row-->
