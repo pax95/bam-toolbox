@@ -110,9 +110,9 @@
 			
 		}		
 		else if(time.toLowerCase() == "day"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
+			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
 			timeGroup = "day";
-			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
+			orderByQuery = "group by hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
 			selectQuery = "time, sum(total_messages) as totalmessages";
 
 			jqPlotXaxisLbl = "Day";
@@ -200,7 +200,7 @@
 				return array;
        	};
 	function QueryResults(q){
-		var db = new Database("jdbc:mysql://localhost:3306/bam4", "bam", "bam");
+		var db = new Database("jdbc:mysql://localhost:3306/bam3", "bam", "bam");
 		var result;
 		try{
 			result = db.query(q);
