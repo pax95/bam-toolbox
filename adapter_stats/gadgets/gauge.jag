@@ -129,7 +129,7 @@
 	}
 	//require("dashboardUtils.jag");
 	function QueryResults(q){
-		var db = new Database("jdbc:mysql://localhost:3306/bam3", "bam", "bam");
+		var db = new Database("ADAPTER_DATASOURCE");
 		var result;
 		try{
 			result = db.query(q);						
