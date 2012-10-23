@@ -13,7 +13,7 @@ STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPE
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
 'hive.jdbc.primary.key.fields' = 'adapter,year,month,day,hour',
-'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_HOUR ( adapter VARCHAR(100) NOT NULL, total_messages BIGINT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time VARCHAR(30))' );
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_SUMMARY_PER_HOUR ( adapter VARCHAR(100) NOT NULL, total_messages BIGINT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT, hour SMALLINT, time VARCHAR(30))' );
 
 insert overwrite table AdapterStatsPerHour select adapter, count(adapter), avg(sizeInBytes), min(sizeInBytes),  max(sizeInBytes), sum(sizeInBytes),
 year(from_unixtime(cast(payload_timestamp/1000 as BIGINT),'yyyy-MM-dd HH:mm:ss.SSS' )) as year, 
@@ -35,7 +35,7 @@ STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPE
 'mapred.jdbc.driver.class' = 'com.mysql.jdbc.Driver',
 'mapred.jdbc.url' = 'jdbc:mysql://localhost:3306/bam3',
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
-'mapred.jdbc.input.table.name' = 'ADAPTER_STATS_SUMMARY_PER_HOUR' );
+'mapred.jdbc.input.table.name' = 'ADAPTER_SUMMARY_PER_HOUR' );
 
 CREATE EXTERNAL TABLE IF NOT EXISTS AdapterStatsPerDay(adapter STRING, total_messages BIGINT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT,day SMALLINT, time STRING) 
 STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPERTIES ( 
@@ -44,7 +44,7 @@ STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPE
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
 'hive.jdbc.primary.key.fields' = 'adapter,year,month,day',
-'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_DAY ( adapter VARCHAR(100) NOT NULL, total_messages BIGINT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT, time VARCHAR(30))' );
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_SUMMARY_PER_DAY ( adapter VARCHAR(100) NOT NULL, total_messages BIGINT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT, day SMALLINT, time VARCHAR(30))' );
 
 insert overwrite table AdapterStatsPerDay select adapter, sum(total_messages), avg(avg_size), min(min_size), max(max_size), sum(sum_size),
 year, 
@@ -67,7 +67,7 @@ STORED BY 'org.wso2.carbon.hadoop.hive.jdbc.storage.JDBCStorageHandler' TBLPROPE
 'mapred.jdbc.username' = 'bam','mapred.jdbc.password' = 'bam',
 'hive.jdbc.update.on.duplicate' = 'true',
 'hive.jdbc.primary.key.fields' = 'adapter,year,month',
-'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_STATS_SUMMARY_PER_MONTH ( adapter VARCHAR(100) NOT NULL, total_messages INT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT, time VARCHAR(30))' );
+'hive.jdbc.table.create.query' = 'CREATE TABLE ADAPTER_SUMMARY_PER_MONTH ( adapter VARCHAR(100) NOT NULL, total_messages INT, avg_size DOUBLE, min_size DOUBLE, max_size DOUBLE, sum_size DOUBLE, year SMALLINT, month SMALLINT, time VARCHAR(30))' );
 
 insert overwrite table AdapterStatsPerMonth select adapter, sum(total_messages), avg(avg_size), min(min_size), max(max_size), sum(sum_size),
 year, 

@@ -36,6 +36,7 @@
 			date = y+"-"+M+"-"+d;		
 		}
 		else{
+			h=h+1;
 			date = y+"-"+M+"-"+d+" "+h+":"+m+":"+s;
 		}
 		return date;
@@ -94,7 +95,7 @@
 
 	if(time){
 		if(time.toLowerCase() == "now"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
+			dataTable = "ADAPTER_SUMMARY_PER_HOUR";
 			//timeGroup = "hour";
 			orderByQuery = "group by hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
 			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
@@ -107,7 +108,7 @@
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "day"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
+			dataTable = "ADAPTER_SUMMARY_PER_HOUR";
 			//timeGroup = "hour";
 			orderByQuery = "group by hour,year,month,day,time order by year DESC ,month DESC,day DESC,hour DESC";
 			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
@@ -120,7 +121,7 @@
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "month"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
+			dataTable = "ADAPTER_SUMMARY_PER_DAY";
 			//timeGroup = "day";
 			orderByQuery = "group by year,month,day,time order by year DESC ,month DESC,day DESC";
 			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";
@@ -133,7 +134,7 @@
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "all"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_MONTH";
+			dataTable = "ADAPTER_SUMMARY_PER_MONTH";
 			//timeGroup = "month";
 			orderByQuery = "group by year,month,time order by year DESC ,month DESC";
 			selectQuery = "time, sum(sum_size)/1024/1024 as sum_size";

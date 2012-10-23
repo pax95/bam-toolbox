@@ -5,7 +5,7 @@ getAllAdapters()
 		var db = new Database("ADAPTER_DATASOURCE");
 		
 		try{
-	    		var result = db.query("select distinct adapter from ADAPTER_STATS_SUMMARY_PER_MONTH");
+	    		var result = db.query("select distinct adapter from ADAPTER_SUMMARY_PER_MONTH");
 			print(result);
 		}
 		catch(e){

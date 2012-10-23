@@ -92,25 +92,25 @@
 
 	if(time){
 		if(time.toLowerCase() == "now"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
+			dataTable = "ADAPTER_SUMMARY_PER_HOUR";
 			var toDate = getCurrentDay("now");
 			var fromDate = setFromdate("now");
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "day"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_HOUR";
+			dataTable = "ADAPTER_SUMMARY_PER_HOUR";
 			var toDate = getCurrentDay("day");
 			var fromDate = setFromdate("day");
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "month"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_DAY";
+			dataTable = "ADAPTER_SUMMARY_PER_DAY";
 			var toDate = getCurrentDay("month");
 			var fromDate = setFromdate("month");
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
 		}
 		else if(time.toLowerCase() == "all"){
-			dataTable = "ADAPTER_STATS_SUMMARY_PER_MONTH";
+			dataTable = "ADAPTER_SUMMARY_PER_MONTH";
 			var toDate = getCurrentDay("year");
 			var fromDate = setFromdate("year");
 			timeBetweenQuery = "time between '" + fromDate + "' and '" + toDate + "'";
