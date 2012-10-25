@@ -47,9 +47,9 @@
   </div>
 </div>
 
-<div class="container-fluid">
+<div class="container">
   
-    <div class="span10">
+    <div class="span12">
       <div class="well topFilteringPanel"><span class="span3">Select Adapter :
           <select id="adapter-dd" name="basic-combo">
                 <option value="__default__"></option>
